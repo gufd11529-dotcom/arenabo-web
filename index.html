@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="es-UY">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bo. · Arena para gatos que habla como nosotros</title>
+<meta name="description" content="Bo. es la arena para gatos hecha para casas uruguayas: neutra y lavanda en 4 kg, y un consejo con humor en cada bolsa. Más aromas, muy pronto.">
+<link rel="canonical" href="https://arenabo.com/">
+<meta name="theme-color" content="#0f1b2d">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_UY">
+<meta property="og:site_name" content="Bo.">
+<meta property="og:title" content="Bo. · Arena para gatos que habla como nosotros">
+<meta property="og:description" content="Neutra y lavanda en 4 kg, con un consejo con humor uruguayo en cada bolsa. Más aromas, muy pronto.">
+<meta property="og:url" content="https://arenabo.com/">
+<meta property="og:image" content="https://arenabo.com/img/og.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Brand","name":"Bo.","url":"https://arenabo.com/","logo":"https://arenabo.com/img/og.jpg","slogan":"La arena para gatos que habla como nosotros","email":"info@arenabo.com","parentOrganization":{"@type":"Organization","name":"Grupo Meridian SAS","address":{"@type":"PostalAddress","streetAddress":"Correch 1111 esq. Ituzaingó","addressLocality":"Pando","addressRegion":"Canelones","postalCode":"91000","addressCountry":"UY"}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Shrikhand&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f1b2d'/%3E%3Ctext x='9' y='45' font-family='Arial Black' font-size='34' fill='white'%3EBo%3C/text%3E%3Ccircle cx='54' cy='42' r='6' fill='%23f6c33b'/%3E%3C/svg%3E">
+<style>
+/* Concepto: la bolsa habla. Portada que vuelca arena al bajar, catálogo en carrusel, consejos que se dan vuelta, atardecer de cierre. */
+:root{
+ --navy:#0f1b2d;--ink:#0a121f;--sol:#f6c33b;--crema:#f4eee2;--gris:#5b6675;--arena:#e3cfa2;
+ --lav:#c4b3e3;--lim:#f4dc55;--man:#b2dc98;--neu:#ece4d4;--car:#c4c8cd;
+ --pad:clamp(18px,5vw,90px);
+ --disp:"Shrikhand","Bricolage Grotesque",cursive;
+ --logo:"Archivo Black","Bricolage Grotesque",sans-serif;
+ --body:"Bricolage Grotesque",system-ui,sans-serif;
+ color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{font-family:var(--body);color:var(--navy);background:var(--crema);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--sol);outline-offset:3px}
+.dot{display:inline-block;width:.28em;height:.28em;border-radius:50%;background:var(--sol);margin-left:.03em}
+.k{font-weight:800;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--gris)}
+.grain{position:fixed;inset:-50%;z-index:90;pointer-events:none;opacity:.06;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");animation:gr 1s steps(4) infinite}
+@keyframes gr{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}}
+
+/* loader */
+#loader{position:fixed;inset:0;z-index:100;background:var(--ink);display:grid;place-items:center;color:#fff}
+#loader .lg{font-family:var(--logo);font-size:clamp(80px,16vw,200px);letter-spacing:-.04em;overflow:hidden;line-height:1}
+#loader .lg span{display:inline-block}
+
+/* cursor */
+#cur{position:fixed;left:0;top:0;width:14px;height:14px;border-radius:50%;background:var(--sol);z-index:95;pointer-events:none;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:width .25s,height .25s}
+#cur.big{width:64px;height:64px;background:transparent;mix-blend-mode:normal;box-shadow:inset 0 0 0 2px var(--sol)}
+@media(hover:none){#cur{display:none}}
+
+/* nav */
+header{position:fixed;top:0;left:0;right:0;z-index:50;transition:transform .45s cubic-bezier(.2,.7,.2,1);display:flex;justify-content:space-between;align-items:center;padding:22px var(--pad);mix-blend-mode:difference;color:#fff}
+header .lg{font-family:var(--logo);font-size:28px;letter-spacing:-.04em}
+header nav{display:flex;gap:30px;font-weight:700;font-size:14px;letter-spacing:.04em}
+@media(max-width:760px){header nav{display:none}}
+
+/* ================= HERO que vuelca arena ================= */
+.hero{position:relative;height:100svh;min-height:620px;background:var(--ink);color:#fff;overflow:hidden}
+.hero .sky{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 110%,#f08a4b 0%,#c3567a 28%,#3b2a63 55%,var(--ink) 80%)}
+.hero .sun{position:absolute;left:50%;bottom:-18vmin;width:56vmin;height:56vmin;margin-left:-28vmin;border-radius:50%;background:radial-gradient(circle,#fff5cf 0%,#f6c33b 45%,rgba(246,195,59,0) 70%);filter:blur(2px)}
+.hero h1{position:absolute;left:50%;top:50%;transform:translate(-50%,-56%);font-family:var(--logo);font-size:clamp(150px,min(30vw,52vh),560px);line-height:.8;letter-spacing:-.06em;white-space:nowrap;z-index:2}
+.hero h1 .ch{display:inline-block}
+.hero h1 .dot{width:.24em;height:.24em;box-shadow:0 0 0 .05em #fff}
+.fan{position:absolute;left:50%;bottom:-4vh;width:0;height:0;z-index:4}
+.fan img{max-width:none;position:absolute;bottom:0;width:clamp(120px,min(22vw,24vh),290px);left:calc(clamp(120px,min(22vw,24vh),290px) / -2);transform-origin:50% 100%;filter:drop-shadow(0 30px 30px rgba(0,0,0,.55));will-change:transform}
+#sand{position:absolute;left:0;top:0;width:100%;height:100%;z-index:5;pointer-events:none}
+.hero .claim{position:absolute;left:var(--pad);top:clamp(90px,12vh,130px);z-index:6;max-width:340px;font-size:clamp(15px,1.2vw,18px);line-height:1.45;color:#e6e0f0}
+.hero .claim b{display:block;font-family:var(--disp);font-weight:400;font-size:clamp(22px,2vw,30px);line-height:1.12;color:#fff;margin-bottom:10px}
+.hero .pour{position:absolute;left:var(--pad);width:min(44vw,640px);top:30%;z-index:6;text-align:left;font-family:var(--disp);font-size:clamp(40px,7vw,120px);line-height:.98;opacity:0;pointer-events:none;text-shadow:0 8px 40px rgba(0,0,0,.35)}
+.hero .pour span{color:var(--sol)}
+.hero .scroll{position:absolute;right:var(--pad);bottom:clamp(28px,5vh,60px);z-index:6;font-weight:800;font-size:12px;letter-spacing:.24em;text-transform:uppercase;display:flex;align-items:center;gap:12px}
+.hero .scroll i{display:block;width:1px;height:46px;background:#fff;transform-origin:top;animation:sc 1.6s ease-in-out infinite}
+@keyframes sc{0%{transform:scaleY(0)}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@media(max-width:760px){.hero .pour{width:auto;right:var(--pad);top:13%;text-align:center}.hero .claim{right:var(--pad);max-width:none;top:90px}.hero .scroll{display:none}.fan img{width:28vw;left:-14vw}}
+
+/* ================= MANIFIESTO ================= */
+.mani{padding:clamp(110px,16vh,200px) var(--pad)}
+.mani .k{margin-bottom:36px}
+.mani p{font-weight:800;font-size:clamp(34px,5.4vw,92px);line-height:1.02;letter-spacing:-.035em;max-width:1500px;font-variation-settings:"opsz" 96}
+.mani .w{opacity:.12}
+.mani .serif{font-family:var(--disp);font-weight:400;letter-spacing:0}
+
+/* ================= CARRUSEL «Elegí tu Bo.» ================= */
+.shop{position:relative;padding:clamp(90px,12vh,140px) 0 clamp(80px,10vh,120px);background:var(--acc,var(--lav));transition:background .6s cubic-bezier(.2,.7,.2,1);overflow:hidden}
+.shop .top{padding:0 var(--pad);display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.shop h2{font-family:var(--disp);font-weight:400;font-size:clamp(48px,7vw,120px);line-height:.95;margin-top:10px}
+.shop .k{color:rgba(15,27,45,.65)}
+.nav-ar{display:flex;gap:10px}
+.nav-ar button{width:58px;height:58px;border-radius:50%;border:0;background:var(--navy);color:#fff;font-size:22px;cursor:pointer;transition:transform .2s}
+.nav-ar button:hover{transform:scale(1.08)}
+.shop .wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(20px,4vw,70px);align-items:center;padding:0 var(--pad);margin-top:clamp(20px,4vh,50px)}
+.stage{position:relative;height:min(64svh,620px);perspective:1400px;touch-action:pan-y;cursor:grab;user-select:none}
+.stage:active{cursor:grabbing}
+.slot{position:absolute;left:50%;bottom:0;transform-origin:50% 100%;will-change:transform;cursor:pointer;background:none;border:0;padding:0}
+.slot img{height:min(58svh,560px);width:auto;max-width:none;filter:drop-shadow(0 34px 30px rgba(15,27,45,.38));pointer-events:none}
+.slot .lbl{position:absolute;left:0;right:0;bottom:-34px;text-align:center;font-weight:800;font-size:14px;letter-spacing:.1em;text-transform:uppercase;opacity:0;transition:opacity .3s}
+.slot.on .lbl{opacity:1}
+.ficha{position:relative;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);border-radius:28px;padding:clamp(24px,3vw,40px);box-shadow:0 30px 60px -30px rgba(15,27,45,.35)}
+.ficha .num{font-weight:800;font-size:13px;letter-spacing:.22em;color:var(--gris)}
+.ficha h3{font-family:var(--disp);font-weight:400;font-size:clamp(40px,4.6vw,76px);line-height:1;margin-top:8px}
+.ficha .desc{font-size:clamp(16px,1.25vw,19px);line-height:1.5;margin-top:12px;color:#2c3a4f;max-width:46ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chips span{font-size:13px;font-weight:800;padding:7px 12px;border-radius:999px;background:var(--navy);color:#fff}
+.chips span.alt{background:transparent;color:var(--navy);box-shadow:inset 0 0 0 2px var(--navy)}
+.ficha .lab{font-weight:800;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--gris);margin-top:26px}
+.sizes{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.sizes button{border:0;cursor:pointer;padding:12px 18px;border-radius:14px;background:rgba(15,27,45,.08);font-weight:800;font-size:16px;line-height:1.1;text-align:left}
+.sizes button small{display:block;font-weight:600;font-size:12px;opacity:.7}
+.sizes button[aria-pressed=true]{background:var(--navy);color:#fff}
+.sizes button.soon:not([aria-pressed=true]){opacity:.55}
+.pronto-tag{display:inline-block;margin-left:10px;vertical-align:middle;font-family:var(--body);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;background:var(--navy);color:var(--sol);padding:6px 10px;border-radius:8px}
+.ya-tag{background:#1f7a3d;color:#fff}
+.slot.soonimg img{filter:drop-shadow(0 34px 30px rgba(15,27,45,.38)) saturate(.55) brightness(.97)}
+.slot .soonlbl{display:block;font-size:11px;letter-spacing:.16em;color:rgba(15,27,45,.7)}
+.ficha .nota{margin-top:10px;font-size:14px;font-weight:700;color:#5b4300}
+.ficha .fr{margin-top:24px;font-weight:800;font-size:clamp(17px,1.4vw,21px);line-height:1.3}
+.ficha .fr span{display:inline-block;margin-top:8px;background:var(--navy);color:var(--sol);padding:6px 12px;border-radius:9px;transform:rotate(-1.5deg)}
+.dots{display:flex;justify-content:center;gap:10px;margin-top:clamp(40px,6vh,70px)}
+.dots button{width:44px;height:44px;border-radius:50%;border:3px solid rgba(15,27,45,.15);cursor:pointer;transition:transform .2s,border-color .2s}
+.dots button[aria-current=true]{border-color:var(--navy);transform:scale(1.12)}
+.hint{text-align:center;margin-top:14px;font-size:13px;font-weight:700;color:rgba(15,27,45,.6)}
+@media(max-width:900px){
+ .shop .wrap{grid-template-columns:1fr}
+ .stage{height:min(52svh,480px)}
+ .slot img{height:min(46svh,420px)}
+}
+
+/* ================= CONSEJOS ================= */
+.oraculo{background:var(--navy);color:#fff;padding:clamp(90px,12vh,150px) var(--pad);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(30px,5vw,90px);align-items:center;overflow:hidden}
+.oraculo .k{color:#9fb0c4}
+.oraculo h2{font-family:var(--disp);font-weight:400;font-size:clamp(44px,6vw,104px);line-height:.98;margin-top:12px}
+.oraculo p.sub{font-size:clamp(16px,1.3vw,20px);color:#cfd8e3;margin-top:18px;max-width:44ch;line-height:1.5}
+.btn{display:inline-flex;align-items:center;gap:12px;margin-top:30px;border:0;cursor:pointer;background:var(--sol);color:var(--navy);font-weight:800;font-size:18px;padding:18px 28px;border-radius:999px;transition:transform .2s}
+.btn:hover{transform:translateY(-3px) rotate(-1deg)}
+.btn i{font-style:normal;display:inline-block;transition:transform .5s}
+.btn:hover i{transform:rotate(180deg)}
+.deck{position:relative;height:clamp(360px,46vw,520px);perspective:1400px}
+.card{position:absolute;inset:0;border-radius:30px;padding:clamp(28px,4vw,54px);display:flex;flex-direction:column;justify-content:space-between;gap:16px;box-shadow:0 40px 60px -30px rgba(0,0,0,.6)}
+.card.back1{transform:translate(18px,18px) rotate(4deg);opacity:.55}
+.card.back2{transform:translate(34px,34px) rotate(8deg);opacity:.3}
+.card .n{font-weight:800;font-size:13px;letter-spacing:.22em;color:rgba(15,27,45,.65)}
+.card .t{font-weight:800;font-size:clamp(28px,3.4vw,54px);line-height:1.05;letter-spacing:-.02em;color:var(--navy)}
+.card .r{align-self:flex-start;font-family:var(--disp);font-size:clamp(20px,2.3vw,36px);line-height:1.15;background:var(--navy);color:var(--sol);padding:10px 18px;border-radius:14px;transform:rotate(-2deg)}
+.card .sig{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:14px;color:rgba(15,27,45,.7)}
+.card .sig b{font-family:var(--logo);font-size:26px;color:var(--navy)}
+@media(max-width:900px){.oraculo{grid-template-columns:1fr}.deck{height:460px;margin-right:34px}}
+
+/* ================= ATARDECER ================= */
+.sunset{position:relative;height:100svh;overflow:hidden;color:#fff;background:#7ab8e0}
+.sunset .sky2{position:absolute;inset:0}
+.sunset .sun2{position:absolute;left:50%;width:30vmin;height:30vmin;margin-left:-15vmin;border-radius:50%;background:radial-gradient(circle,#fffbe6 0%,#ffd45a 40%,#f6a13b 62%,rgba(246,161,59,0) 72%)}
+.sunset .skyl{position:absolute;left:0;right:0;bottom:34%;height:12vh;width:100%;opacity:.85}
+.sunset .sea{position:absolute;left:0;right:0;bottom:0;height:34%;background:linear-gradient(180deg,#26406b,#0f1b2d);overflow:hidden}
+.sunset .sea i{position:absolute;left:50%;width:60vmin;margin-left:-30vmin;height:100%;top:0;background:repeating-linear-gradient(180deg,rgba(255,214,120,.5) 0 2px,transparent 2px 9px);-webkit-mask:radial-gradient(50% 90% at 50% 0,#000 20%,transparent 75%);mask:radial-gradient(50% 90% at 50% 0,#000 20%,transparent 75%);filter:blur(1.2px);animation:wv 3s ease-in-out infinite alternate}
+@keyframes wv{to{transform:scaleX(1.12) translateY(2px)}}
+.sunset .wall{position:absolute;left:0;right:0;bottom:0;height:12%;background:linear-gradient(180deg,#2a2234,#15101d)}
+.sunset .cat{position:absolute;left:62%;bottom:calc(12% - 2px);width:clamp(54px,6vw,96px)}
+.sunset .t{position:absolute;left:var(--pad);right:var(--pad);top:11vh;z-index:3;text-align:center;line-height:1}
+.sunset .t1{font-family:var(--disp);font-size:clamp(36px,6vw,104px);text-shadow:0 6px 40px rgba(0,0,0,.25)}
+.sunset .t2{display:inline-block;margin-top:24px;font-family:var(--disp);font-size:clamp(24px,3.6vw,60px);background:var(--navy);color:var(--sol);padding:10px 22px;border-radius:14px;transform:rotate(-2deg)}
+
+/* ================= GALERÍA ================= */
+.gal{padding:clamp(90px,12vw,170px) var(--pad);display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(12px,2vw,28px);align-items:start}
+.gal .tx{grid-column:1/6;align-self:center}
+.gal h2{font-family:var(--disp);font-weight:400;font-size:clamp(40px,5vw,84px);line-height:1;margin-top:16px}
+.gal .tx p{font-size:clamp(16px,1.3vw,20px);color:#34445a;margin-top:20px;max-width:440px;line-height:1.5}
+.ph{overflow:hidden;border-radius:22px;position:relative}
+.ph img{width:100%;height:120%;object-fit:cover;will-change:transform}
+.ph.a{grid-column:6/13;aspect-ratio:4/5;grid-row:1/3}
+.ph.b{grid-column:1/6;aspect-ratio:4/3}
+.ph.c{grid-column:1/13;aspect-ratio:21/9}
+.ia{position:absolute;right:12px;bottom:12px;font-size:11px;font-weight:700;background:rgba(15,27,45,.7);color:#fff;padding:4px 9px;border-radius:6px}
+@media(max-width:860px){.gal{grid-template-columns:1fr}.gal .tx,.ph.a,.ph.b,.ph.c{grid-column:1/-1;grid-row:auto}}
+
+/* ================= COMPRAR ================= */
+.pacto{padding:clamp(90px,12vw,170px) var(--pad);background:var(--navy);color:#fff;display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(40px,6vw,90px);align-items:center}
+.pacto h2{font-family:var(--disp);font-weight:400;font-size:clamp(46px,7vw,120px);line-height:.95;color:var(--sol)}
+.pacto .tx p{font-size:clamp(18px,1.6vw,22px);line-height:1.5;color:#dfe6ee;margin-top:26px;max-width:34ch}
+.pacto .tx p b{color:#fff}
+.ticket{background:var(--sol);color:var(--navy);border-radius:26px;padding:clamp(30px,3.4vw,46px);position:relative;transform:rotate(-2deg);box-shadow:0 30px 60px rgba(0,0,0,.35)}
+.ticket:before,.ticket:after{content:"";position:absolute;top:50%;width:34px;height:34px;border-radius:50%;background:var(--navy);transform:translateY(-50%)}
+.ticket:before{left:-17px}.ticket:after{right:-17px}
+.ticket small{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+.ticket strong{display:block;font-family:var(--disp);font-weight:400;font-size:clamp(64px,8vw,120px);line-height:.9;margin:14px 0 6px}
+.ticket h3{font-family:var(--disp);font-weight:400;font-size:clamp(24px,2.4vw,34px);line-height:1.1}
+.ticket p{margin-top:16px;border-top:2px dashed rgba(20,30,50,.35);padding-top:16px;font-weight:600}
+@media(max-width:860px){.pacto{grid-template-columns:1fr}.ticket{transform:rotate(-1.5deg);margin:0 6px}}
+.buy{padding:clamp(90px,12vw,170px) var(--pad);background:var(--sol)}
+.buy h2{font-family:var(--disp);font-weight:400;font-size:clamp(46px,7vw,130px);line-height:.95}
+.buy .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}
+.buy .c{background:var(--navy);color:#fff;border-radius:24px;padding:34px 30px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .3s}
+.buy .c:hover{transform:translateY(-8px) rotate(-1deg)}
+.buy .c h3{font-family:var(--disp);font-weight:400;font-size:clamp(26px,2.4vw,36px)}
+.buy .c p{color:#cfd8e3;margin-top:10px}
+.buy .c span{align-self:flex-start;font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;background:var(--sol);color:var(--navy);padding:6px 11px;border-radius:6px;margin-top:20px}
+@media(max-width:860px){.buy .grid{grid-template-columns:1fr}}
+
+/* ================= FOOTER ================= */
+.shop{overflow-x:clip}
+.info{padding:clamp(80px,10vw,150px) var(--pad);background:var(--crema)}
+.info h2{font-family:var(--disp);font-weight:400;font-size:clamp(40px,6vw,100px);line-height:.95;color:var(--navy)}
+.info .sub{max-width:52ch;margin-top:18px;font-size:clamp(16px,1.3vw,19px);color:var(--gris)}
+.info .g{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:48px}
+.info .i{background:#fff;border-radius:22px;padding:28px 24px;border:2px solid rgba(15,27,45,.08)}
+.info .i b{display:block;font-family:var(--disp);font-weight:400;font-size:clamp(30px,3vw,46px);line-height:1;color:var(--navy)}
+.info .i h3{font-size:17px;font-weight:800;margin-top:12px;color:var(--navy)}
+.info .i p{margin-top:8px;color:var(--gris);font-size:15px;line-height:1.5}
+@media(max-width:960px){.info .g{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.info .g{grid-template-columns:1fr}}
+.buy .c{cursor:pointer;text-align:left;font:inherit;border:0}
+.contacto{padding:clamp(80px,10vw,150px) var(--pad);background:var(--crema);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:clamp(30px,5vw,80px);align-items:start}
+.contacto h2{font-family:var(--disp);font-weight:400;font-size:clamp(40px,6vw,96px);line-height:.95;color:var(--navy)}
+.contacto .sub{margin-top:18px;color:var(--gris);font-size:clamp(16px,1.3vw,19px);max-width:40ch}
+.fm{background:#fff;border-radius:26px;padding:clamp(22px,3vw,40px);box-shadow:0 20px 60px rgba(15,27,45,.08)}
+.fm fieldset{border:0;padding:0;margin:0}
+.fm legend{font-weight:800;color:var(--navy);margin-bottom:12px;font-size:16px}
+.tipos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tipos label{display:flex;gap:10px;align-items:center;border:2px solid rgba(15,27,45,.12);border-radius:14px;padding:14px;cursor:pointer;font-weight:700;color:var(--navy);font-size:15px;line-height:1.2;transition:border-color .2s,background .2s}
+.tipos input{accent-color:var(--navy);width:18px;height:18px;flex:none}
+.tipos label:has(input:checked){border-color:var(--navy);background:#fdf4d8}
+.fm .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.fm .f{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.fm .row .f{margin-top:0}
+.fm .f span{font-size:13px;font-weight:800;color:var(--navy)}
+.fm input[type=text],.fm input[type=email],.fm input[type=tel],.fm select,.fm textarea{font:inherit;font-size:16px;padding:13px 14px;border-radius:12px;border:2px solid rgba(15,27,45,.14);background:#fbf9f4;color:var(--navy);width:100%}
+.fm input:focus,.fm select:focus,.fm textarea:focus{outline:none;border-color:var(--navy)}
+.fm .solo-com{display:none}.fm.es-com .solo-com{display:block}.fm.es-com .row.solo-com{display:grid}
+.fm .send{margin-top:20px;width:100%;background:var(--navy);color:var(--sol);font:inherit;font-weight:800;font-size:17px;padding:17px;border:0;border-radius:14px;cursor:pointer}
+.fm .send:disabled{opacity:.6;cursor:wait}
+.fm .ok{display:none;text-align:center;padding:30px 10px}
+.fm .ok b{display:block;font-family:var(--disp);font-weight:400;font-size:clamp(34px,4vw,52px);color:var(--navy)}
+.fm .ok p{margin-top:10px;color:var(--gris)}
+.fm .err{display:none;margin-top:12px;color:#b3261e;font-weight:700;font-size:14px}
+.fm .priv{margin-top:12px;font-size:12px;color:var(--gris)}
+.hp{position:absolute;left:-9999px}
+@media(max-width:860px){.contacto{grid-template-columns:1fr}}
+@media(max-width:520px){.tipos{grid-template-columns:1fr}.fm .row{grid-template-columns:1fr}}
+footer{background:var(--ink);color:#cfd8e3;padding:80px var(--pad) 40px;overflow:hidden}
+footer .huge{font-family:var(--logo);color:#fff;font-size:clamp(140px,33vw,600px);line-height:.78;letter-spacing:-.07em;white-space:nowrap}
+footer .huge .dot{box-shadow:0 0 0 .05em #fff}
+footer .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;margin-top:40px;font-size:14px}
+footer small{opacity:.7;max-width:560px}
+
+.sw{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
+.sw>span{display:inline-block}
+
+@media(prefers-reduced-motion:reduce){.grain,.hero .scroll i,.sunset .sea i{animation:none}}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div id="cur"></div>
+<div id="loader"><div class="lg"><span>B</span><span>o</span><span class="dot" style="width:.24em;height:.24em"></span></div></div>
+
+<header><a class="lg" href="#top">Bo.</a><nav><a href="#arenas">Arenas</a><a href="#consejos">Consejos</a><a href="#atardecer">Atardecer</a><a href="#comprar">Comprar</a></nav></header>
+
+<section class="hero" id="top">
+ <div class="sky"></div><div class="sun"></div>
+ <h1 aria-label="Bo."><span class="ch">B</span><span class="ch">o</span><span class="ch dot"></span></h1>
+ <div class="fan" aria-hidden="true">
+  <img src="img/lim-8.webp" alt=""><img src="img/man-8.webp" alt=""><img src="img/lav-8.webp" alt=""><img src="img/neu-8.webp" alt=""><img src="img/car-8.webp" alt="">
+ </div>
+ <canvas id="sand" aria-hidden="true"></canvas>
+ <div class="claim"><b>La arena para gatos que habla como nosotros.</b>Neutra y lavanda en 4 kg, con un consejo con humor uruguayo en cada bolsa. Más aromas, muy pronto.</div>
+ <div class="pour" aria-hidden="true">Arena de la buena,<br><span>bo.</span></div>
+ <div class="scroll"><i></i>Bajá, bo</div>
+</section>
+
+<section class="mani">
+ <div class="k">La idea</div>
+ <p id="mani">Todas las arenas de la góndola se parecen. Bo. no. Cada bolsa trae un consejo útil para tu gato y un remate que te va a sacar una <span class="serif">sonrisa.</span></p>
+</section>
+
+<section class="shop" id="arenas" aria-label="Las cinco arenas de Bo.">
+ <div class="top">
+  <div><div class="k">Las arenas</div><h2 data-split>Elegí tu Bo.</h2></div>
+  <div class="nav-ar"><button id="prev" aria-label="Arena anterior">←</button><button id="next" aria-label="Arena siguiente">→</button></div>
+ </div>
+ <div class="wrap">
+  <div class="stage" id="stage"></div>
+  <div class="ficha" id="ficha" aria-live="polite">
+   <div class="num" id="fNum"></div>
+   <h3 id="fName"></h3>
+   <p class="desc" id="fDesc"></p>
+   <div class="chips" id="fChips"></div>
+   <div class="lab">Tamaño</div>
+   <div class="sizes" id="fSizes" role="group" aria-label="Tamaño">
+    <button data-kg="4" aria-pressed="true">4 kg<small>Ya disponible</small></button>
+    <button data-kg="8" aria-pressed="false" class="soon">8 kg<small>Próximamente</small></button>
+    <button data-kg="16" aria-pressed="false" class="soon">16 kg<small>Próximamente</small></button>
+   </div>
+   <p class="fr" id="fFr"></p>
+  </div>
+ </div>
+ <div class="dots" id="dots" aria-label="Elegir arena"></div>
+ <p class="hint">Arrastrá, usá las flechas o tocá una bolsa.</p>
+</section>
+
+<section class="info" id="la-arena">
+  <h2 data-split>Qué hay en la bolsa.</h2>
+  <p class="sub">Lo que querés saber antes de cambiar de arena, sin vueltas.</p>
+  <div class="g">
+   <div class="i"><b>Natural</b><h3>Bentonita</h3><p>Arcilla natural que absorbe la humedad y deja el arenero seco.</p></div>
+   <div class="i"><b>Bolitas</b><h3>Aglomera firme</h3><p>Con el pis forma bolitas duras. Sacás solo lo usado y el resto queda limpio.</p></div>
+   <div class="i"><b>3-4</b><h3>Semanas con un gato</h3><p>Lo que rinde una bolsa de 4 kg con un gato, sacando las bolitas todos los días.</p></div>
+   <div class="i"><b>2</b><h3>Para arrancar</h3><p>Neutra, sin perfume, y lavanda suave. Los otros aromas y tamaños llegan después.</p></div>
+  </div>
+ </section>
+ <section class="oraculo" id="consejos">
+ <div>
+  <div class="k">Doce consejos, uno por bolsa</div>
+  <h2 data-split>Pedile un consejo a Bo.</h2>
+  <p class="sub">Cada bolsa trae uno. Acá podés leerlos todos antes de juntarlos.</p>
+  <button class="btn" id="otro">Otro, bo <i>↻</i></button>
+ </div>
+ <div class="deck" id="deck">
+  <div class="card back2"></div><div class="card back1"></div>
+  <div class="card" id="cardMain"><div class="n" id="cN"></div><div class="t" id="cT"></div><div class="r" id="cR"></div><div class="sig"><span id="cA"></span><b>Bo.</b></div></div>
+ </div>
+</section>
+
+<section class="sunset" id="atardecer">
+ <div class="sky2"></div><div class="sun2"></div>
+ <svg class="skyl" viewBox="0 0 1600 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120V86h40V62h26v24h30V40h22v46h18V70h34v16h24V30h14v-8h10v8h14v56h40V58h30v28h26V76h50v44zM1060 120V92h30V70h22V48h28v22h20v22h46V60h18V44h14v16h20v32h36V74h40v18h50V82h46v38z" fill="#1b1730"/></svg>
+ <div class="sea"><i></i></div>
+ <div class="wall"></div>
+ <svg class="cat" viewBox="0 0 60 62" aria-hidden="true"><path d="M14 62c-2-12 0-24 6-30l-4-12 8 7c4-1 8-1 12 0l8-7-4 12c6 6 8 18 6 30z" fill="#15101d"/><path class="tail" d="M48 58c8 0 12-6 10-14" stroke="#15101d" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+ <div class="t"><div class="t1">Vos tenés el atardecer<br>en la rambla.</div><div class="t2">Dejale al menos una buena arena, bo.</div></div>
+</section>
+
+<section class="gal">
+ <div class="tx"><div class="k">El mundo de Bo.</div><h2 data-split>En casa, con el mate y el gato.</h2><p>Luz de tarde, la rambla, la yerba. Una marca que se parece a tu casa, no a una góndola.</p></div>
+ <div class="ph a"><img src="img/casa.webp" alt="Bolsas de Bo. en un living de Montevideo con mate y un gato"><span class="ia">Imagen ilustrativa</span></div>
+ <div class="ph b"><img src="img/tamanos.webp" alt="Tres tamaños de Bo. lavanda"><span class="ia">Imagen ilustrativa</span></div>
+ <div class="ph c"><img src="img/mano.webp" alt="Bolsas de Bo. en la playa frente a La Mano de Punta del Este"><span class="ia">Imagen ilustrativa</span></div>
+</section>
+
+<section class="pacto" id="pacto">
+  <div class="tx">
+   <h2 data-split>Bo. recién arranca.</h2>
+   <p>Nos la estamos jugando: <b>arena de la buena, al precio de siempre</b>.</p>
+   <p>Si confiás y la probás, crecemos. Y si crecemos, traemos más aromas, más tamaños y mejor servicio.</p>
+  </div>
+  <div class="ticket">
+   <small>Muy pronto · Algunas bolsas traen premio</small>
+   <strong>10</strong>
+   <h3>bolsas gratis, te las llevamos a casa.</h3>
+   <p>Sabemos que la arena es un gasto más del mes. No podemos con todos, pero a quien le toque, bo.</p>
+  </div>
+ </section>
+ <section class="buy" id="comprar">
+ <h2 data-split>Muy pronto, cerca tuyo.</h2>
+ <div class="grid">
+   <button class="c" data-tipo="casa"><div><h3>Para tu casa</h3><p>Dejanos tu contacto y te avisamos cuando Bo. llegue cerca tuyo.</p></div><span>Avisame</span></button>
+   <button class="c" data-tipo="comercio"><div><h3>Para tu comercio</h3><p>Almacén, pet shop o veterinaria: vendé Bo. con precio mayorista.</p></div><span>Quiero vender Bo.</span></button>
+   <button class="c" data-tipo="distribuidor"><div><h3>Distribuidores y súper</h3><p>Volumen, cadenas y reparto en todo el país. Hablemos.</p></div><span>Hablemos</span></button>
+  </div>
+ </section>
+<section class="contacto" id="contacto">
+  <div><h2 data-split>Escribinos, bo.</h2><p class="sub">Contanos quién sos y te respondemos nosotros, no un robot. Si preferís el correo: <a href="mailto:info@arenabo.com" style="color:var(--navy);font-weight:800">info@arenabo.com</a></p></div>
+  <form class="fm" id="fm" novalidate>
+   <div class="campos">
+   <fieldset><legend>¿Quién sos?</legend>
+    <div class="tipos">
+     <label><input type="radio" name="tipo" value="Particular" data-t="casa" checked>Quiero probarla en casa</label>
+     <label><input type="radio" name="tipo" value="Comercio" data-t="comercio">Tengo un comercio</label>
+     <label><input type="radio" name="tipo" value="Distribuidor" data-t="distribuidor">Soy distribuidor</label>
+     <label><input type="radio" name="tipo" value="Supermercado o cadena" data-t="super">Supermercado o cadena</label>
+    </div>
+   </fieldset>
+   <div class="row"><label class="f"><span>Nombre</span><input type="text" name="nombre" autocomplete="name" required></label><label class="f"><span>Departamento</span><select name="departamento" required><option value="">Elegí</option><option>Artigas</option><option>Canelones</option><option>Cerro Largo</option><option>Colonia</option><option>Durazno</option><option>Flores</option><option>Florida</option><option>Lavalleja</option><option>Maldonado</option><option>Montevideo</option><option>Paysandú</option><option>Río Negro</option><option>Rivera</option><option>Rocha</option><option>Salto</option><option>San José</option><option>Soriano</option><option>Tacuarembó</option><option>Treinta y Tres</option></select></label></div>
+   <div class="row"><label class="f"><span>Email</span><input type="email" name="email" autocomplete="email"></label><label class="f"><span>Celular</span><input type="tel" name="celular" autocomplete="tel" placeholder="09X XXX XXX"></label></div>
+   <div class="row solo-com"><label class="f"><span>Nombre del comercio o empresa</span><input type="text" name="empresa" autocomplete="organization"></label><label class="f"><span>Bolsas de 4 kg por mes (aprox.)</span><select name="volumen"><option value="">Elegí</option><option>Menos de 50</option><option>50 a 200</option><option>200 a 1.000</option><option>Más de 1.000</option><option>No sé todavía</option></select></label></div>
+   <label class="f"><span>¿Algo más? (opcional)</span><textarea name="mensaje" rows="3"></textarea></label>
+   <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off">
+   <button class="send" type="submit">Enviar</button>
+   <p class="err" id="fErr"></p>
+   <p class="priv">Usamos tus datos solo para responderte. Nada de spam, bo.</p>
+   </div>
+   <div class="ok" id="fOk"><b>¡Recibido, bo!</b><p>Te escribimos en breve.</p></div>
+  </form>
+ </section>
+
+
+<footer>
+ <div class="huge">Bo<span class="dot"></span></div>
+ <div class="foot"><b style="color:#fff">Arena para gatos. Hecha para casas uruguayas.</b><span>Escribinos: <a href="mailto:info@arenabo.com" style="color:#f6c33b;font-weight:800">info@arenabo.com</a></span><span>Una marca de Grupo Meridian · Pando, Uruguay</span></div>
+ <div class="foot"><small>Consejos generales: ante cualquier duda sobre la salud de tu gato, consultá a tu veterinario. Imágenes ilustrativas.</small></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+if(!window.gsap||!window.ScrollTrigger){document.getElementById('loader').remove();document.querySelectorAll('.w').forEach(w=>w.style.opacity=1);throw new Error('sin animaciones');}
+if('scrollRestoration' in history)history.scrollRestoration='manual';scrollTo(0,0);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+gsap.registerPlugin(ScrollTrigger);
+
+/* ---------- datos ---------- */
+const AR=[
+ {k:'lav',soon:0,n:'Lavanda',c:'#c4b3e3',tag:'Aroma lavanda',d:'Suave y fresca. Para la casa de siempre, cuando querés que el living huela a living.',chips:['Aglomerante','Bentonita','Perfume suave'],f:['El arenero lejos del plato.','Vos tampoco comés en el baño, bo.']},
+ {k:'lim',soon:1,n:'Limón',c:'#f4dc55',tag:'Aroma limón',d:'Cítrico y alegre. Se siente limpio apenas abrís la bolsa.',chips:['Aglomerante','Bentonita','Perfume cítrico'],f:['¿Dos gatos? Tres areneros.','¿Vos compartís el baño con tu cuñado? Eso, bo.']},
+ {k:'man',soon:1,n:'Manzana',c:'#b2dc98',tag:'Aroma manzana',d:'Fresca y dulce, sin empalagar. Para los que quieren algo distinto.',chips:['Aglomerante','Bentonita','Perfume frutal'],f:['Ponelo en un lugar tranquilo.','Nadie quiere público en el baño, bo.']},
+ {k:'neu',soon:0,n:'Neutro',c:'#ece4d4',tag:'Sin perfume',d:'Sin perfume. Para gatos y narices sensibles, o para los que prefieren que no huela a nada.',chips:['Aglomerante','Bentonita','Sin perfume'],f:['Vos tenés el atardecer en la rambla.','Dejale al menos una buena arena, bo.']},
+ {k:'car',soon:1,n:'Carbón activado',c:'#c4c8cd',tag:'Carbón activado',d:'Con carbón activado, el que más ayuda a controlar el olor. Para casas con varios gatos.',chips:['Aglomerante','Bentonita','Carbón activado'],f:['Con 5 cm de arena alcanza.','No es la Playa Brava, bo.']}
+];
+AR.sort((a,b)=>a.soon-b.soon||(a.k==='neu'?-1:b.k==='neu'?1:0));
+const CONS=[
+ ['El arenero lejos del plato.','Vos tampoco comés en el baño, bo.','lav'],
+ ['¿Dos gatos? Tres areneros.','¿Vos compartís el baño con tu cuñado? Eso, bo.','lim'],
+ ['Si tu gato deja de usar el arenero, llevalo al veterinario.','Él no habla, pero avisa, bo.','man'],
+ ['Limpialo todos los días.','Vos tirás la cadena, ¿no? Bueno, bo.','neu'],
+ ['Ponelo en un lugar tranquilo.','Nadie quiere público en el baño, bo.','car'],
+ ['Lejos del lavarropas.','Imaginate ir al baño en pleno centrifugado, bo.','lav'],
+ ['Vos tenés el atardecer en la rambla.','Dejale al menos una buena arena, bo.','lim'],
+ ['Arenero grande: que entre y gire.','Vos tampoco entrás de costado al baño, bo.','man'],
+ ['Con 5 cm de arena alcanza.','No es la Playa Brava, bo.','neu'],
+ ['Si cambiás de arena, hacelo de a poco.','A vos tampoco te gusta que te cambien la yerba de golpe, bo.','car'],
+ ['¿Mudanza? El arenero va primero.','Antes que el termo, bo.','lav'],
+ ['Cambiá la arena entera cada tanto.','Vos también te cambiás las medias, bo.','lim']
+];
+const COL=Object.fromEntries(AR.map(a=>[a.k,a.c]));
+
+/* ---------- manifiesto palabra por palabra ---------- */
+const mani=document.getElementById('mani');
+mani.innerHTML=mani.innerHTML.replace(/(<span class="serif">.*?<\/span>)|([^\s<]+)/g,(m,s)=>`<span class="w">${s||m}</span>`).replace('Bo.</span>','Bo<span class="dot"></span></span>');
+
+/* ---------- cursor ---------- */
+const cur=document.getElementById('cur');
+addEventListener('mousemove',e=>gsap.to(cur,{x:e.clientX,y:e.clientY,duration:.25,ease:'power3'}));
+const hov=el=>{el.addEventListener('mouseenter',()=>cur.classList.add('big'));el.addEventListener('mouseleave',()=>cur.classList.remove('big'))};
+
+/* ---------- smooth scroll ---------- */
+let lenis=null;
+if(!reduce&&window.Lenis){lenis=new Lenis({lerp:.09});lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);
+ document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();lenis.scrollTo(a.getAttribute('href'))}));}
+
+/* =========================================================
+   HERO: abanico → las de los costados se van → la del medio vuelca arena
+   ========================================================= */
+const fan=[...document.querySelectorAll('.fan img')];
+const mob=()=>innerWidth<760;
+const spread=()=>mob()?[-34,-17,0,17,34]:[-26,-13,0,13,26];
+function fanPos(i,p){const r=spread()[i]*p;return{rotation:r,x:Math.sin(r*Math.PI/180)*innerWidth*(mob()?.55:.17),y:(1-Math.cos(r*Math.PI/180))*260+(1-p)*40}}
+function setFan(p){fan.forEach((im,i)=>gsap.set(im,{...fanPos(i,p),zIndex:i===2?5:5-Math.abs(i-2)}))}
+setFan(1);
+gsap.set(fan[2],{transformOrigin:'50% 50%'});
+
+/* balanceo suave mientras no se baja */
+const idle=gsap.timeline({paused:true,repeat:-1,yoyo:true});
+fan.forEach((im,i)=>idle.to(im,{yPercent:-4-(i%2)*3,duration:1.6+i*.15,ease:'sine.inOut'},0));
+
+const intro=gsap.timeline({paused:true});
+intro.to('#loader .lg span',{yPercent:-110,stagger:.08,duration:.6,ease:'power3.in',delay:.3})
+ .to('#loader',{yPercent:-100,duration:.9,ease:'expo.inOut'},'-=.15')
+ .from('.hero h1 .ch',{yPercent:110,opacity:0,stagger:.09,duration:1.1,ease:'expo.out'},'-=.45')
+ .from('.hero .sun',{y:'30vmin',duration:1.6,ease:'expo.out'},'<')
+ .fromTo({p:0},{p:0},{p:1,duration:1.4,ease:'expo.out',onUpdate(){setFan(this.targets()[0].p)}},'-=1.1')
+ .from('.fan',{y:'40vh',duration:1.2,ease:'expo.out'},'<')
+ .from('.hero .claim,.hero .scroll',{opacity:0,y:20,duration:.8},'-=.8')
+ .add(()=>{if(scrollY<20)idle.play()});
+
+/* --- arena: partículas en canvas --- */
+const cv=document.getElementById('sand'),cx=cv.getContext('2d');
+let W=0,H=0,DPR=Math.min(2,devicePixelRatio||1),P=[],COLS=160,heap=new Array(COLS).fill(0);
+const SANDC=['#e9d6a8','#dcc390','#f1e2bd','#cfb37c','#e3cfa2'];
+function size(){const r=cv.getBoundingClientRect();W=r.width;H=r.height;cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0)}
+size();addEventListener('resize',size);
+let pourRate=0;
+function spout(){const b=fan[2].getBoundingClientRect(),h=cv.getBoundingClientRect();
+ const rot=gsap.getProperty(fan[2],'rotation')*Math.PI/180,sc=gsap.getProperty(fan[2],'scale');
+ const w=fan[2].offsetWidth*sc,hh=fan[2].offsetHeight*sc;
+ const ox=b.left+b.width/2-h.left, oy=b.top+b.height/2-h.top;
+ const lx=w*.38, ly=-hh*.47; // boca de la bolsa (arriba a la derecha) en coords locales
+ return{x:ox+lx*Math.cos(rot)-ly*Math.sin(rot),y:oy+lx*Math.sin(rot)+ly*Math.cos(rot)}}
+function tick(){
+ if(!W)return;
+ cx.clearRect(0,0,W,H);
+ if(pourRate>0){const s=spout();const n=Math.round(pourRate*(mob()?7:12));
+  for(let i=0;i<n;i++)P.push({x:s.x+(Math.random()-.5)*22,y:s.y+(Math.random()-.5)*10,vx:-1.6+Math.random()*3.2,vy:Math.random()*1.2,r:.8+Math.random()*1.6,c:SANDC[(Math.random()*SANDC.length)|0]});}
+ const colW=W/COLS;
+ for(let i=P.length-1;i>=0;i--){const p=P[i];p.vy+=.22;p.vx*=.995;p.vx+=(Math.random()-.5)*.25;p.x+=p.vx;p.y+=p.vy;
+  const ci=Math.max(0,Math.min(COLS-1,(p.x/colW)|0));
+  if(p.y>=H-heap[ci]){heap[ci]=Math.min(H*.3,heap[ci]+p.r*.5);
+   for(let k=1;k<5;k++){if(ci-k>=0&&heap[ci]-heap[ci-k]>2.5){heap[ci]-=.5;heap[ci-k]+=.5}if(ci+k<COLS&&heap[ci]-heap[ci+k]>2.5){heap[ci]-=.5;heap[ci+k]+=.5}}
+   P.splice(i,1);continue}
+  if(p.x<-20||p.x>W+20){P.splice(i,1);continue}
+  cx.fillStyle=p.c;cx.fillRect(p.x,p.y,p.r,p.r)}
+ let any=false;for(let i=0;i<COLS;i++)if(heap[i]>0){any=true;break}
+ if(any){const g=cx.createLinearGradient(0,H*.7,0,H);g.addColorStop(0,'#ecd9ab');g.addColorStop(1,'#c4a46a');cx.fillStyle=g;cx.beginPath();cx.moveTo(0,H);
+  for(let i=0;i<COLS;i++){const a=heap[Math.max(0,i-1)],b=heap[i],c2=heap[Math.min(COLS-1,i+1)];cx.lineTo(i*colW+colW/2,H-(a+2*b+c2)/4)}
+  cx.lineTo(W,H);cx.closePath();cx.fill()}
+}
+gsap.ticker.add(tick);
+
+/* --- scroll del hero --- */
+const heroTL=gsap.timeline({scrollTrigger:{trigger:'.hero',pin:true,scrub:1,start:'top top',end:'+=170%',refreshPriority:10,
+ onUpdate:s=>{const p=s.progress;pourRate=(p>.44&&p<.94)?Math.min(1,(p-.44)*5):0;if(p<.4){P.length=0;heap.fill(0)}
+  if(p>.02)idle.pause();else if(intro.progress()===1)idle.play()}}});
+heroTL
+ .to('.hero .claim,.hero .scroll',{opacity:0,y:-20,duration:.12},0)
+ .to('.hero h1',{yPercent:-60,scale:.7,opacity:()=>mob()?0:.1,duration:.4,ease:'power2.in'},0)
+ .to('.hero .sun',{y:'-10vmin',scale:1.2,duration:.6},0)
+ .to(fan[0],{x:()=>-innerWidth*.7,y:()=>-innerHeight*.15,rotation:-70,duration:.35,ease:'power2.in'},.05)
+ .to(fan[4],{x:()=>innerWidth*.7,y:()=>-innerHeight*.15,rotation:70,duration:.35,ease:'power2.in'},.05)
+ .to(fan[1],{x:()=>-innerWidth*.6,y:()=>innerHeight*.3,rotation:-40,duration:.35,ease:'power2.in'},.1)
+ .to(fan[3],{x:()=>innerWidth*.6,y:()=>innerHeight*.3,rotation:40,duration:.35,ease:'power2.in'},.1)
+ .to(fan[2],{y:()=>-innerHeight*(mob()?.3:.42),x:()=>innerWidth*(mob()?.04:.17),scale:mob()?1.05:1.2,duration:.25,ease:'power2.out'},.12)
+ .to(fan[2],{rotation:115,duration:.2,ease:'power2.inOut'},.36)
+ .to(fan[2],{rotation:128,duration:.38,ease:'sine.inOut'},.56)
+ .to('.hero .pour',{opacity:1,y:0,duration:.18},.64)
+ .to({},{duration:.06},.94);
+gsap.set('.hero .pour',{y:30});
+
+/* ---------- títulos letra por letra ---------- */
+document.querySelectorAll('[data-split]').forEach(h=>{
+ h.innerHTML=h.textContent.split(' ').map(w=>`<span class="sw">${[...w].map(c=>`<span>${c}</span>`).join('')}</span>`).join(' ');
+ gsap.from(h.querySelectorAll('.sw>span'),{yPercent:110,rotate:8,stagger:.018,duration:.9,ease:'expo.out',scrollTrigger:{trigger:h,start:'top 88%'}});
+});
+
+/* ---------- manifiesto ---------- */
+gsap.to('#mani .w',{opacity:1,stagger:.1,ease:'none',scrollTrigger:{trigger:'.mani',start:'top 75%',end:'bottom 60%',scrub:true}});
+
+/* =========================================================
+   CARRUSEL «Elegí tu Bo.»
+   ========================================================= */
+const stage=document.getElementById('stage'),shop=document.querySelector('.shop');
+let idx=0,kg=4,drag=0;
+AR.forEach((a,i)=>{const b=document.createElement('button');b.className='slot';b.setAttribute('aria-label','Ver '+a.n);
+ b.innerHTML=`<img src="img/${a.k}-4.webp" alt="Bolsa de Bo. ${a.n}"><span class="lbl">${a.n}${a.soon?'<span class="soonlbl">Próximamente</span>':''}</span>`;if(a.soon)b.classList.add('soonimg');
+ b.addEventListener('click',()=>{if(Math.abs(drag)<6)go(i)});hov(b);stage.appendChild(b)});
+const slots=[...stage.children];
+const dots=document.getElementById('dots');
+AR.forEach((a,i)=>{const d=document.createElement('button');d.style.background=a.c;d.setAttribute('aria-label',a.n);d.onclick=()=>go(i);hov(d);dots.appendChild(d)});
+const scaleKg={4:.86,8:.93,16:1};
+const sp=()=>mob()?innerWidth*.42:Math.min(stage.clientWidth*.34,300);
+function layout(anim=true,off=0){
+ const n=AR.length;
+ slots.forEach((s,i)=>{let d=i-idx;if(d>n/2)d-=n;if(d<-n/2)d+=n;const dd=d+off;const a=Math.abs(dd);
+  const t={x:dd*sp()-s.offsetWidth/2,z:-a*220,rotationY:-dd*22,scale:(i===idx?scaleKg[kg]:.62)*(1-Math.min(a,2)*.05),opacity:a>2.2?0:1-a*.2,zIndex:10-Math.round(a)};
+  s.classList.toggle('on',i===idx);s.setAttribute('aria-current',i===idx);
+  anim?gsap.to(s,{...t,duration:.8,ease:'expo.out',overwrite:'auto'}):gsap.set(s,t)});
+}
+function fill(){const a=AR[idx];
+ shop.style.setProperty('--acc',a.c);
+ document.getElementById('fNum').textContent=String(idx+1).padStart(2,'0')+' / 05 · '+a.tag.toUpperCase();
+ document.getElementById('fName').innerHTML=a.n+(a.soon?'<span class="pronto-tag">Próximamente</span>':'<span class="pronto-tag ya-tag">Primera tanda</span>');
+ document.getElementById('fDesc').textContent=a.d;
+ document.getElementById('fChips').innerHTML=a.chips.map((c,i)=>`<span class="${i===2?'alt':''}">${c}</span>`).join('');
+ document.getElementById('fFr').innerHTML=`${a.f[0]}<br><span>${a.f[1]}</span>`;
+ let nt=document.getElementById('fNota');if(!nt){nt=document.createElement('p');nt.id='fNota';nt.className='nota';document.getElementById('fSizes').after(nt)}
+ nt.textContent=a.soon?'Este aroma llega en las próximas tandas.':(kg===4?'Sale en la primera tanda.':'Este tamaño llega en las próximas tandas.');
+ [...dots.children].forEach((d,i)=>d.setAttribute('aria-current',i===idx));
+ slots.forEach((s,i)=>{const im=s.querySelector('img');const want=`img/${AR[i].k}-${i===idx?kg:4}.webp`;if(!im.getAttribute('src').endsWith(want))im.src=want});
+ gsap.fromTo('#ficha > *',{y:14,opacity:0},{y:0,opacity:1,stagger:.035,duration:.5,ease:'power3.out',overwrite:true});
+}
+function go(i){idx=(i+AR.length)%AR.length;fill();layout()}
+document.getElementById('prev').onclick=()=>go(idx-1);
+document.getElementById('next').onclick=()=>go(idx+1);
+hov(document.getElementById('prev'));hov(document.getElementById('next'));
+document.querySelectorAll('#fSizes button').forEach(b=>{hov(b);b.onclick=()=>{kg=+b.dataset.kg;document.querySelectorAll('#fSizes button').forEach(x=>x.setAttribute('aria-pressed',x===b));fill();layout()}});
+addEventListener('keydown',e=>{const r=shop.getBoundingClientRect();if(r.top<innerHeight*.6&&r.bottom>innerHeight*.4){if(e.key==='ArrowRight'){e.preventDefault();go(idx+1)}if(e.key==='ArrowLeft'){e.preventDefault();go(idx-1)}}});
+let sx=0,down=false;
+stage.addEventListener('pointerdown',e=>{down=true;sx=e.clientX;drag=0});
+addEventListener('pointermove',e=>{if(!down)return;drag=e.clientX-sx;if(Math.abs(drag)>6)layout(false,drag/sp())});
+addEventListener('pointerup',()=>{if(!down)return;down=false;const st=Math.abs(drag)>50?-Math.sign(drag):0;if(Math.abs(drag)>6){st?go(idx+st):layout()}setTimeout(()=>drag=0,30)});
+addEventListener('resize',()=>layout(false));
+fill();layout(false);
+gsap.from('.stage',{y:120,opacity:0,duration:1.1,ease:'expo.out',scrollTrigger:{trigger:'.shop',start:'top 70%'}});
+
+/* =========================================================
+   CONSEJOS que se dan vuelta
+   ========================================================= */
+let ci=0;const cardMain=document.getElementById('cardMain'),b1=document.querySelector('.card.back1'),b2=document.querySelector('.card.back2');
+function paintCard(){const c=CONS[ci];cardMain.style.background=COL[c[2]];
+ b1.style.background=COL[CONS[(ci+1)%12][2]];b2.style.background=COL[CONS[(ci+2)%12][2]];
+ document.getElementById('cN').textContent='CONSEJO '+String(ci+1).padStart(2,'0')+' DE 12';
+ document.getElementById('cT').textContent=c[0];document.getElementById('cR').textContent=c[1];
+ document.getElementById('cA').textContent='Para tu gato, con cariño'}
+paintCard();
+const otro=document.getElementById('otro');hov(otro);
+let busy=false;
+otro.onclick=()=>{if(busy)return;busy=true;let n;do{n=(Math.random()*12)|0}while(n===ci);
+ gsap.timeline().to(cardMain,{rotationY:90,x:40,duration:.28,ease:'power2.in',onComplete:()=>{ci=n;paintCard()}})
+  .fromTo(cardMain,{rotationY:-90,x:-40},{rotationY:0,x:0,duration:.45,ease:'back.out(1.6)',onComplete:()=>busy=false})};
+gsap.from('#deck',{y:80,rotate:-4,opacity:0,duration:1,ease:'expo.out',scrollTrigger:{trigger:'.oraculo',start:'top 70%'}});
+
+/* =========================================================
+   ATARDECER
+   ========================================================= */
+const sky=document.querySelector('.sky2'),sun=document.querySelector('.sun2');
+const skies=[['#7ab8e0','#bfe0f2','#fbe7b8'],['#5b6fb3','#e7967a','#f7c46b'],['#2b2156','#b2507a','#f08a4b'],['#120d2a','#3b2459','#a44863']];
+const lerp=(a,b,t)=>{const q=x=>[1,3,5].map(i=>parseInt(x.substr(i,2),16));const A=q(a),B=q(b);return 'rgb('+A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')+')'};
+function paint(t){const s=t*(skies.length-1),i=Math.min(Math.floor(s),skies.length-2),f=s-i;const c=skies[i].map((x,k)=>lerp(x,skies[i+1][k],f));
+ sky.style.background=`linear-gradient(180deg,${c[0]} 0%,${c[1]} 50%,${c[2]} 66%)`;sun.style.top=(34+t*34)+'%';sun.style.opacity=1-Math.max(0,t-.82)*4}
+paint(0);
+gsap.timeline({scrollTrigger:{trigger:'.sunset',pin:true,scrub:1,end:'+=180%',refreshPriority:8,onUpdate:s=>paint(s.progress)}})
+ .from('.sunset .t1',{opacity:0,y:60,duration:.25}).from('.sunset .t2',{opacity:0,scale:.6,rotation:-12,duration:.2,ease:'back.out(2)'},.55)
+ .to('.sunset .tail',{rotation:18,transformOrigin:'0% 100%',duration:.1,yoyo:true,repeat:3},.7);
+
+/* ---------- galería y cierre ---------- */
+document.querySelectorAll('.ph').forEach(ph=>{
+ gsap.fromTo(ph,{clipPath:'inset(18% 10% 18% 10% round 22px)'},{clipPath:'inset(0% 0% 0% 0% round 22px)',ease:'none',scrollTrigger:{trigger:ph,start:'top 95%',end:'top 35%',scrub:true}});
+ gsap.fromTo(ph.querySelector('img'),{yPercent:-12},{yPercent:0,ease:'none',scrollTrigger:{trigger:ph,start:'top bottom',end:'bottom top',scrub:true}});
+});
+gsap.from('.gal .tx p',{y:40,opacity:0,duration:1,ease:'expo.out',scrollTrigger:{trigger:'.gal',start:'top 70%'}});
+gsap.from('.ticket',{y:90,rotate:6,opacity:0,duration:1.2,ease:'expo.out',scrollTrigger:{trigger:'.pacto',start:'top 75%'}});
+gsap.from('.pacto .tx p',{y:30,opacity:0,stagger:.15,duration:1,ease:'expo.out',scrollTrigger:{trigger:'.pacto',start:'top 70%'}});
+gsap.from('.buy .c',{y:80,opacity:0,stagger:.12,duration:1,ease:'expo.out',scrollTrigger:{trigger:'.buy .grid',start:'top 85%'}});
+gsap.from('footer .huge',{yPercent:60,ease:'none',scrollTrigger:{trigger:'footer',start:'top bottom',end:'bottom bottom',scrub:true}});
+document.querySelectorAll('a,.buy .c,.fm .send,.tipos label').forEach(hov);
+
+ScrollTrigger.sort();ScrollTrigger.refresh();
+addEventListener('load',()=>{ScrollTrigger.refresh();size();layout(false)});
+
+/* menú: se oculta al bajar */
+let lastY=0;const hd=document.querySelector('header');
+addEventListener('scroll',()=>{const y=scrollY;hd.style.transform=(y>lastY&&y>200)?'translateY(-110%)':'none';lastY=y},{passive:true});
+
+if(reduce){gsap.set('#loader',{display:'none'});intro.progress(1)}else{let go=false;const start=()=>{if(go)return;go=true;intro.play()};Promise.all([document.fonts?document.fonts.ready:0,...fan.map(i=>i.decode?i.decode().catch(()=>0):0)]).then(start);setTimeout(start,2500);addEventListener('load',start)}
+
+/* formulario de contacto */
+(()=>{const f=document.getElementById('fm');if(!f)return;const err=document.getElementById('fErr');
+const upd=()=>{const t=f.querySelector('input[name=tipo]:checked').dataset.t;f.classList.toggle('es-com',t!=='casa')};
+f.querySelectorAll('input[name=tipo]').forEach(r=>r.addEventListener('change',upd));upd();
+document.querySelectorAll('.buy .c[data-tipo]').forEach(b=>b.addEventListener('click',()=>{const r=f.querySelector('input[data-t="'+b.dataset.tipo+'"]');if(r){r.checked=true;upd()}const el=document.getElementById('contacto');if(lenis)lenis.scrollTo(el,{offset:-20});else el.scrollIntoView({behavior:'smooth'});setTimeout(()=>f.querySelector('[name=nombre]').focus({preventScroll:true}),900)}));
+f.addEventListener('submit',async e=>{e.preventDefault();err.style.display='none';
+ const d=Object.fromEntries(new FormData(f));
+ if(d._honey)return;
+ if(!d.nombre||!d.departamento){err.textContent='Faltan tu nombre y tu departamento.';err.style.display='block';return}
+ if(!d.email&&!d.celular){err.textContent='Dejanos un email o un celular para responderte.';err.style.display='block';return}
+ if(d.email&&!/^\S+@\S+\.\S+$/.test(d.email)){err.textContent='Revisá el email.';err.style.display='block';return}
+ if(d.tipo!=='Particular'&&!d.empresa){err.textContent='Contanos el nombre del comercio o empresa.';err.style.display='block';return}
+ const btn=f.querySelector('.send');btn.disabled=true;btn.textContent='Enviando…';
+ const body={_subject:'Bo. · '+d.tipo+' · '+d.nombre+' ('+d.departamento+')',_template:'table',Tipo:d.tipo,Nombre:d.nombre,Departamento:d.departamento,Email:d.email||'-',Celular:d.celular||'-'};
+ if(d.tipo!=='Particular'){body.Empresa=d.empresa;body['Bolsas por mes']=d.volumen||'-'}
+ body.Mensaje=d.mensaje||'-';if(d.email)body._replyto=d.email;
+ try{const r=await fetch('https://formsubmit.co/ajax/info@arenabo.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({}));if(!r.ok||String(j.success)==='false')throw 0;
+  f.querySelector('.campos').style.display='none';document.getElementById('fOk').style.display='block';
+ }catch(_){btn.disabled=false;btn.textContent='Enviar';err.innerHTML='No se pudo enviar. Escribinos a <a href="mailto:info@arenabo.com">info@arenabo.com</a>.';err.style.display='block'}
+});})();
+</script>
+</body>
+</html>
